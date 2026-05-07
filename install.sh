@@ -1,131 +1,93 @@
-#!/bin/bash
-# install.sh — Cinematic Installer for Butcher [HELLHOUND-class]
+#!/usr/bin/env bash
+# install.sh — Surgical Installer for Butcher [HELLHOUND-class]
 
-# Zero-dependency Python HUD for immediate animation start
-python3 - << 'EOF'
-import sys
-import time
-import math
-import threading
-import subprocess
-import shutil
-import os
+set -e
 
-# ------ CONFIGURATION & ASSETS ------
-_BRAILLE_WAVE = ["⠁", "⠃", "⠇", "⡇", "⣇", "⣧", "⣷", "⣿", "⣾", "⣶", "⣦", "⣄", "⡄", "⠄", "⠀", "⠀"]
+# Branding Colors
+BR='\033[91m' # Bright Red
+Y='\033[33m'  # Yellow
+W='\033[97m'  # White
+GR='\033[90m' # Grey
+C='\033[36m'  # Cyan
+B='\033[1m'   # Bold
+D='\033[2m'   # Dim
+RST='\033[0m' # Reset
 
-def get_terminal_width():
-    try:
-        return shutil.get_terminal_size().columns
-    except:
-        return 80
+# Markers
+INFO="${W}[${C}#${W}]${RST}"
+SUCCESS="${W}[${Y}✓${W}]${RST}"
+ERROR="${W}[${BR}✗${W}]${RST}"
 
-def case_wave_ansi(text, frame):
-    """Simple ANSI-based case-wave effect."""
-    result = ""
-    for i, ch in enumerate(text):
-        if ch == " ":
-            result += " "
-            continue
-        val = math.sin(i * 0.45 + frame * 4.5)
-        if val > 0.7:
-            result += f"\033[1;31m{ch.upper()}\033[0m"
-        elif val > 0.3:
-            result += f"\033[31m{ch.upper()}\033[0m"
-        elif val > -0.1:
-            result += f"\033[31m{ch}\033[0m"
-        else:
-            result += f"\033[2;31m{ch.lower()}\033[0m"
-    return result
+log() { echo -e "  ${INFO} ${GR}$1${RST}"; }
+success() { echo -e "  ${SUCCESS} ${B}${W}$1${RST}"; }
+error() { echo -e "  ${ERROR} ${BR}$1${RST}"; exit 1; }
 
-def draw_ui(text, stop_event):
-    """Animates a single-line HUD using pure ANSI."""
-    n = len(_BRAILLE_WAVE)
-    sys.stdout.write("\033[?25l")
-    sys.stdout.flush()
-    try:
-        while not stop_event.is_set():
-            t = time.time()
-            tw = get_terminal_width()
-            txt = case_wave_ansi(text, t)
-            wave_width = (tw - len(text) - 10) // 2
-            if wave_width < 2:
-                sys.stdout.write(f"\r{txt}")
-            else:
-                left_chars = "".join(_BRAILLE_WAVE[int((i * 1.5 - t * 18)) % n] for i in range(wave_width))
-                right_chars = "".join(_BRAILLE_WAVE[int(((wave_width - i) * 1.5 + t * 18)) % n] for i in range(wave_width))
-                sys.stdout.write(f"\r\033[1;31m{left_chars}\033[0m  {txt}  \033[1;31m{right_chars}\033[0m")
-            sys.stdout.flush()
-            time.sleep(0.04)
-    finally:
-        sys.stdout.write("\r\033[K\033[?25h")
-        sys.stdout.flush()
+# Center Banner Logic
+TW=$(tput cols || echo 80)
+print_centered() {
+    local text="$1"
+    local color="$2"
+    local clean_text=$(echo -e "$text" | sed 's/\033\[[0-9;]*m//g')
+    local padding=$(( (TW - 2 - ${#clean_text}) / 2 ))
+    printf "${W}│${RST}%${padding}s${color}%s${RST}%$(( TW - 2 - ${#clean_text} - padding ))s${W}│${RST}\n" "" "$text" ""
+}
 
-def run_task(text, cmd):
-    """Runs a task with the animation in a separate thread."""
-    stop_event = threading.Event()
-    t = threading.Thread(target=draw_ui, args=(text, stop_event), daemon=True)
-    t.start()
-    try:
-        # We allow interactive commands (like sudo password) to bypass capture
-        # but generally we want to hide noisy output.
-        if "sudo" in cmd:
-            subprocess.run(cmd, shell=True)
-        else:
-            subprocess.run(cmd, shell=True, capture_output=True)
-    finally:
-        stop_event.set()
-        t.join()
+# Banner
+echo -e "\n${W}┌$(printf '─%.0s' $(seq 1 $((TW - 2))))┐${RST}"
+print_centered "_____________  ______________________  __________________ " "${BR}"
+print_centered "___  __ )_  / / /__  __/_  ____/__  / / /__  ____/__  __ \\" "${BR}"
+print_centered "__  __  |  / / /__  /  _  /    __  /_/ /__  __/  __  /_/ /" "${Y}"
+print_centered "_  /_/ // /_/ / _  /   / /___  _  __  / _  /___  _  _, _/ " "${Y}"
+print_centered "/_____/ \____/  /_/    \____/  /_/ /_/  /_____/  /_/ |_|  " "${Y}"
+print_centered "" ""
+print_centered "[ Surgical Installation Matrix ]" "${D}${W}"
+echo -e "${W}└$(printf '─%.0s' $(seq 1 $((TW - 2))))┘${RST}\n"
 
-def main():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(script_dir)
-
-    # 1. Prepare Environment
-    run_task("PREPARING BUTCHER CORE", "python3 -m venv .venv")
-    
-    # 2. Install Dependencies
-    run_task("CARVING DEPENDENCIES", "./.venv/bin/pip install --upgrade pip")
-    run_task("CARVING DEPENDENCIES", "./.venv/bin/pip install -r requirements.txt")
-    
-    # 3. Mount Surgical Engine (Playwright)
-    run_task("MOUNTING SURGICAL ENGINE", "./.venv/bin/python3 -m playwright install chromium")
-    run_task("PATCHING SYSTEM LIBS", "sudo ./.venv/bin/python3 -m playwright install-deps chromium")
-    
-    # 4. Finalize Deployment
-    # Create the wrapper
-    wrapper_content = f"""#!/usr/bin/env bash
-SELF="$(readlink -f "${{BASH_SOURCE[0]}}" 2>/dev/null || realpath "${{BASH_SOURCE[0]}}" 2>/dev/null || echo "${{BASH_SOURCE[0]}}")"
-SCRIPT_DIR="$(cd "$(dirname "$SELF")" && pwd)"
-VENV_PYTHON="{script_dir}/.venv/bin/python3"
-BUTCHER_SRC="{script_dir}/butcher.py"
-if [ ! -x "$VENV_PYTHON" ]; then
-    echo "[!] Butcher venv not found at: $VENV_PYTHON" >&2
-    exit 1
+# 1. Environment Check
+log "Initializing deployment sequence..."
+if ! command -v python3 &>/dev/null; then
+    error "Python 3 required but not found."
 fi
-exec "$VENV_PYTHON" "$BUTCHER_SRC" "$@"
-"""
-    with open("butcher_wrapper", "w") as f:
-        f.write(wrapper_content)
-    os.chmod("butcher_wrapper", 0o755)
 
-    # Deploy to /usr/local/bin or ~/.local/bin
-    install_dir = "/usr/local/bin"
-    if not os.access(install_dir, os.W_OK):
-        install_dir = os.path.expanduser("~/.local/bin")
-        os.makedirs(install_dir, exist_ok=True)
-    
-    target_path = os.path.join(install_dir, "butcher")
-    deploy_cmd = f"cp butcher_wrapper {target_path} && chmod 755 {target_path}"
-    if "/usr/local/bin" in target_path and not os.access(install_dir, os.W_OK):
-        deploy_cmd = f"sudo cp butcher_wrapper {target_path} && sudo chmod 755 {target_path}"
-    
-    run_task("DEPLOYING SURGICAL TOOL", deploy_cmd)
-    os.remove("butcher_wrapper")
+# 2. Isolation
+log "Carving virtual environment (.venv)..."
+python3 -m venv .venv || error "Failed to create isolation layer."
 
-    print("\n\033[1;32m[✓] BUTCHER DEPLOYED SUCCESSFULLY\033[0m")
-    print("\033[2mSurgical Web Scraper v2.0.0-STABLE\033[0m\n")
+# 3. Dependencies
+log "Mounting core dependencies..."
+./.venv/bin/pip install --quiet --upgrade pip
+./.venv/bin/pip install --quiet -r requirements.txt || error "Dependency carving failed."
 
-if __name__ == "__main__":
-    main()
+# 4. Surgical Engine
+log "Mounting Playwright Chromium cores..."
+./.venv/bin/python3 -m playwright install chromium || true
+if [ "$EUID" -ne 0 ]; then
+    log "Requesting system permissions for engine patches..."
+    sudo ./.venv/bin/python3 -m playwright install-deps chromium >/dev/null 2>&1 || true
+else
+    ./.venv/bin/python3 -m playwright install-deps chromium >/dev/null 2>&1 || true
+fi
+
+# 5. Global Link
+log "Finalizing system-wide deployment..."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WRAPPER_PATH="/usr/local/bin/butcher"
+
+# Create a clean wrapper
+cat <<EOF > butcher_tmp
+#!/usr/bin/env bash
+exec "${SCRIPT_DIR}/.venv/bin/python3" "${SCRIPT_DIR}/butcher.py" "\$@"
 EOF
+
+if [ -w "/usr/local/bin" ]; then
+    mv butcher_tmp "${WRAPPER_PATH}"
+    chmod 755 "${WRAPPER_PATH}"
+else
+    WRAPPER_PATH="${HOME}/.local/bin/butcher"
+    mkdir -p "${HOME}/.local/bin"
+    mv butcher_tmp "${WRAPPER_PATH}"
+    chmod 755 "${WRAPPER_PATH}"
+fi
+
+success "Butcher successfully deployed to ${WRAPPER_PATH}"
+echo -e "  ${GR}Usage: butcher <target>${RST}\n"
