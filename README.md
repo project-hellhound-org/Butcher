@@ -24,7 +24,7 @@
 Butcher is designed to run in an isolated environment to ensure stability and dependency integrity.
 
 ```bash
-git clone https://github.com/project-hellhound/butcher.git
+git clone git@github.com:project-hellhound-org/butcher.git
 cd butcher
 chmod +x install.sh
 ./install.sh
