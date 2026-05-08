@@ -14,5 +14,7 @@ build/
 *.egg-info/
 evidence/
 results.json
-butcher_results.json
+butcher_*.json
+Hellhound_*
+screenshots
 *.log
