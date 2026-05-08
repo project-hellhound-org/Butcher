@@ -19,19 +19,19 @@
   <img src="Images/cli_interface.png" alt="Butcher CLI" width="800"/>
 </p>
 
-## ⚡ Features
+## Features
 - **Surgical Matrix UI**: Sharp, high-fidelity ANSI interface with zero-latency telemetry and dynamic width scaling.
 - **No Green Policy**: Strictly technical color palette (Red, Yellow, Cyan) for maximum tactical focus.
 - **Hellhound-Spider Recon**: Autonomous surface mapping phase powered by the integrated Spider engine.
 - **Dual-Phase Workflow**: Discovery of hidden endpoints followed by surgical data carving.
 - **Automated Reporting**: Intelligent file naming and high-fidelity risk scoring.
 
-## 🚀 Installation
+## Installation
 ```bash
 bash install.sh
 ```
 
-## 🛠️ Usage
+## Usage
 Butcher follows a two-phase surgical workflow:
 
 1. **Recon Phase**: It invokes the `Hellhound-Spider` to map the target's attack surface and ingest all accessible endpoints.
