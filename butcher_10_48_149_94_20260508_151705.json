@@ -24,9 +24,29 @@
         "url": "http://10.48.149.94/secret_file_do_not_read.txt"
     },
     {
+        "type": "SURFACE",
+        "content": "http://10.48.149.94",
+        "score": 10,
+        "url": "http://10.48.149.94"
+    },
+    {
+        "type": "SURFACE",
+        "content": "http://10.48.149.94/flag_1.txt",
+        "score": 10,
+        "url": "http://10.48.149.94/flag_1.txt"
+    },
+    {
+        "type": "EXPOSED_FILE",
+        "content": "flag_1.txt",
+        "score": 100,
+        "url": "http://10.48.149.94/flag_1.txt",
+        "evidence": "FLAG{robots_dot_text_what_is_next}"
+    },
+    {
         "type": "LFI",
         "content": "secret_file_do_not_read.txt",
-        "score": 80,
-        "url": "http://10.48.149.94/post.php?post=secret_file_do_not_read.txt"
+        "score": 100,
+        "url": "http://10.48.149.94/post.php?post=secret_file_do_not_read.txt",
+        "evidence": "Corkplacemats\nHi Mat,\nThe credentials for the FTP server are below. I've set the files to be saved to /home/ftpuser/ftp/files.\nWill\n----------\nftpuser:givemefiles777"
     }
 ]

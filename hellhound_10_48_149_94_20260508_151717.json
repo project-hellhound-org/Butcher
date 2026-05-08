@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "tool": "Hellhound Spider v12.3",
+    "target": "http://10.48.149.94"
+  },
+  "summary": {
+    "total_endpoints": 4,
+    "confirmed": 0,
+    "high": 1,
+    "auth_required": 1,
+    "parameter_sensitive": 0,
+    "secrets": 0,
+    "cors_issues": 0,
+    "graphql_exposed": 0,
+    "openapi_exposed": 0,
+    "sourcemaps_exposed": 0,
+    "tech_stack": [],
+    "admin_panels": 0,
+    "auth_endpoints": 0,
+    "upload_endpoints": 0,
+    "idor_candidates": 0,
+    "sqli_candidates": 0,
+    "cmdi_candidates": 0,
+    "extracted_data": 0,
+    "robots_disallowed": 0,
+    "screenshots": 0
+  },
+  "endpoints": [
+    {
+      "url": "http://10.48.149.94/flag_1.txt",
+      "method": "GET",
+      "confidence": "LOW",
+      "confidence_score": 1,
+      "observed_status": [
+        200
+      ],
+      "params": [],
+      "params_detail": {
+        "query": [],
+        "form": [],
+        "js": [],
+        "openapi": [],
+        "runtime": []
+      },
+      "auth_required": false,
+      "source": [
+        "Robots_Allow"
+      ],
+      "admin_panel": false,
+      "auth_classification": [],
+      "file_upload_candidate": false,
+      "idor_candidate": false,
+      "idor_signals": {},
+      "sqli_candidate": false,
+      "sqli_params": [],
+      "cmdi_candidate": false,
+      "cmdi_params": [],
+      "screenshot": null
+    },
+    {
+      "url": "http://10.48.149.94/secret_file_do_not_read.txt",
+      "method": "GET",
+      "confidence": "MEDIUM",
+      "confidence_score": 4,
+      "observed_status": [
+        403
+      ],
+      "params": [],
+      "params_detail": {
+        "query": [],
+        "form": [],
+        "js": [],
+        "openapi": [],
+        "runtime": []
+      },
+      "auth_required": true,
+      "source": [
+        "Robots_Allow"
+      ],
+      "admin_panel": false,
+      "auth_classification": [],
+      "file_upload_candidate": false,
+      "idor_candidate": false,
+      "idor_signals": {},
+      "sqli_candidate": false,
+      "sqli_params": [],
+      "cmdi_candidate": false,
+      "cmdi_params": [],
+      "screenshot": null
+    },
+    {
+      "url": "http://10.48.149.94",
+      "method": "GET",
+      "confidence": "MEDIUM",
+      "confidence_score": 3,
+      "observed_status": [],
+      "params": [],
+      "params_detail": {
+        "query": [],
+        "form": [],
+        "js": [],
+        "openapi": [],
+        "runtime": []
+      },
+      "auth_required": false,
+      "source": [
+        "HTML(Seed)"
+      ],
+      "admin_panel": false,
+      "auth_classification": [],
+      "file_upload_candidate": false,
+      "idor_candidate": false,
+      "idor_signals": {},
+      "sqli_candidate": false,
+      "sqli_params": [],
+      "cmdi_candidate": false,
+      "cmdi_params": [],
+      "screenshot": null
+    },
+    {
+      "url": "http://10.48.149.94/post.php?post=striped.php",
+      "method": "GET",
+      "confidence": "HIGH",
+      "confidence_score": 9,
+      "observed_status": [
+        200
+      ],
+      "params": [
+        "post"
+      ],
+      "params_detail": {
+        "query": [
+          "post"
+        ],
+        "form": [],
+        "js": [],
+        "openapi": [],
+        "runtime": []
+      },
+      "auth_required": false,
+      "source": [
+        "HTML(HTML_Link)"
+      ],
+      "admin_panel": false,
+      "auth_classification": [],
+      "file_upload_candidate": false,
+      "idor_candidate": false,
+      "idor_signals": {},
+      "sqli_candidate": false,
+      "sqli_params": [],
+      "cmdi_candidate": false,
+      "cmdi_params": [],
+      "screenshot": null
+    }
+  ],
+  "secrets": [],
+  "cors_issues": [],
+  "graphql": [],
+  "openapi": [],
+  "sourcemaps": [],
+  "comments": [
+    {
+      "content": "Custom styles for this template",
+      "source": "http://10.48.149.94"
+    }
+  ],
+  "robots_disallowed": [],
+  "tech_stack": [],
+  "extracted_data": []
+}

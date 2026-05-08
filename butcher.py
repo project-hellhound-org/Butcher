@@ -247,6 +247,11 @@ def extract_clean_text(html: str) -> str:
     """Extract rendered text (stripping noise) while preserving readability"""
     try:
         if not html: return ""
+        # If it doesn't look like HTML, treat as raw text
+        low = html.lower()
+        if not ("<html" in low or "<body" in low or "<div" in low or "<script" in low):
+            return html.strip()
+
         soup = BeautifulSoup(html, 'html.parser')
         # Remove noise
         for tag in soup(['script', 'style', 'nav', 'header', 'footer', 'aside', 'iframe', 'button']):
@@ -258,12 +263,13 @@ def extract_clean_text(html: str) -> str:
         text = '\n'.join(chunk for chunk in chunks if chunk)
         return text
     except:
-        return html.strip()[:1000]
+        return html.strip()
 
 def is_interesting_content(text: str) -> bool:
     """Heuristic check for interesting data in clean text"""
     if not text: return False
-    keywords = ["password", "secret", "key", "token", "auth", "flag{", "admin", "login", "creds", "database", "config"]
+    # Broaden keywords to include 'flag' and others
+    keywords = ["password", "secret", "key", "token", "auth", "flag", "admin", "login", "creds", "database", "config"]
     text_lower = text.lower()
     return any(k in text_lower for k in keywords)
 
@@ -316,12 +322,13 @@ async def run_external_spider(target: str, depth: int, browser: bool, hud: Butch
                 "0/0", "Coverage", "Confidence", ".butcher_recon", "Crawling:"]
         if any(x in clean for x in skip): continue
         if clean.startswith("Target") or clean.startswith("[*]") or clean.startswith("started"): continue
-        if clean.startswith("GET ") and any(x in clean for x in ["HIGH", "MEDIUM", "LOW"]): continue
+        # Removed skip for summary table rows to ensure no endpoint is missed
 
         # Extract URL for dedup
-        url_match = re.search(r'(https?://[^\s\]\)]+)', clean)
+        # Robust URL extraction from spider output
+        url_match = re.search(r'(https?://[^\s\]\)\x1b]+)', clean)
         if not url_match: continue
-        url = url_match.group(1)
+        url = url_match.group(1).rstrip('.')
 
         # Deduplicate
         if url in seen_urls: continue
@@ -524,7 +531,7 @@ class TargetIntelligenceEngine:
                     clean = self._format_content(content, filename)
                     hud.loot(filename, clean[:self.args.max_content_display], url, f"{C.GREEN}[VERIFIED]{C.RST}")
                     
-                    finding = {"type": "EXPOSED_FILE", "file": filename, "url": url}
+                    finding = {"type": "EXPOSED_FILE", "file": filename, "url": url, "evidence": clean}
                     if self.args.screenshot and page and ('<html' in content.lower() or not self._is_raw_file(filename)):
                         ss_path = await self.screenshot_mgr.take_screenshot(url, "direct", page)
                         if ss_path:
@@ -560,7 +567,7 @@ class TargetIntelligenceEngine:
                         clean = self._format_content(content, display_name)
                         hud.loot(display_name, clean[:self.args.max_content_display], poc_url, f"{C.GREEN}[VERIFIED] LFI via {param}{C.RST}")
                         
-                        finding = {"type": "LFI", "param": param, "file": target_file, "url": poc_url}
+                        finding = {"type": "LFI", "param": param, "file": target_file, "url": poc_url, "evidence": clean}
                         if self.args.screenshot and page:
                             ss_path = await self.screenshot_mgr.take_screenshot(poc_url, "lfi", page)
                             if ss_path:
@@ -756,7 +763,14 @@ def main():
         all_findings = list(engine.findings)
         if args.intel and intel.chains:
             for chain in intel.chains:
-                all_findings.append({"type": chain['type'], "content": chain.get('file',''), "score": 80, "url": chain.get('url','')})
+                # Include ACTUAL loot (evidence) in the JSON output
+                all_findings.append({
+                    "type": chain['type'], 
+                    "content": chain.get('file', chain.get('param', 'UNKNOWN')), 
+                    "score": 100, 
+                    "url": chain.get('url', ''),
+                    "evidence": chain.get('evidence', '')
+                })
         if args.output_format == "json":
             with open(args.output, "w") as f: json.dump(all_findings, f, indent=4)
         elif args.output_format == "csv":
