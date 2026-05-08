@@ -15,10 +15,6 @@
   <img src="https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square"/>
 </p>
 
-<p align="center">
-  <img src="Images/cli_interface.png" alt="Butcher CLI" width="800"/>
-</p>
-
 ## Features
 - **Surgical Matrix UI**: Sharp, high-fidelity ANSI interface with zero-latency telemetry and dynamic width scaling.
 - **No Green Policy**: Strictly technical color palette (Red, Yellow, Cyan) for maximum tactical focus.
@@ -30,6 +26,10 @@
 ```bash
 bash install.sh
 ```
+
+<p align="center">
+  <img src="Images/cli_interface.png" alt="Butcher CLI" width="800"/>
+</p>
 
 ## Usage
 Butcher follows a two-phase surgical workflow:
