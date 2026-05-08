@@ -22,32 +22,14 @@
 - **Dual-Phase Workflow**: Discovery of hidden endpoints followed by surgical data carving.
 - **Automated Reporting**: Intelligent file naming and high-fidelity risk scoring.
 
-## Installation
-```bash
-bash install.sh
-```
 
-<p align="center">
-  <img src="Images/cli_interface.png" alt="Butcher CLI" width="800"/>
-</p>
+
 
 ## Usage
 Butcher follows a two-phase surgical workflow:
 
 1. **Recon Phase**: It invokes the `Hellhound-Spider` to map the target's attack surface and ingest all accessible endpoints.
 2. **Extraction Phase**: It carves through the discovered endpoints to extract high-value intelligence.
-
-### Examples
-```bash
-# Basic extraction with automated report naming
-butcher https://target.com --extract emails,api_keys
-
-# Heavy recon with headless browser and deep crawling
-butcher https://target.com --browser --depth 1 --max-pages 20
-
-# Stealth extraction excluding specific sensitive paths
-butcher https://target.com --exclude "logout,delete" --output-format quiet
-```
 
 ### Setup Environment
 
@@ -69,6 +51,24 @@ To pull the latest surgical patterns and core updates:
 ```bash
 ./update.sh
 ```
+
+### Examples
+```bash
+# Basic extraction with automated report naming
+butcher https://target.com --extract emails,api_keys
+
+# Heavy recon with headless browser and deep crawling
+butcher https://target.com --browser --depth 1 --max-pages 20
+
+# Stealth extraction excluding specific sensitive paths
+butcher https://target.com --exclude "logout,delete" --output-format quiet
+```
+
+<p align="center">
+  <img src="Images/cli_interface.png" alt="Butcher CLI" width="800"/>
+</p>
+
+
 
 ---
 
