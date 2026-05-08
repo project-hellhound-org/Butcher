@@ -1,0 +1,32 @@
+[
+    {
+        "type": "SURFACE",
+        "content": "http://10.48.149.94/post.php?post=striped.php",
+        "score": 10,
+        "url": "http://10.48.149.94/post.php?post=striped.php"
+    },
+    {
+        "type": "SURFACE",
+        "content": "http://10.48.149.94/post.php?post=round.php",
+        "score": 10,
+        "url": "http://10.48.149.94/post.php?post=round.php"
+    },
+    {
+        "type": "SURFACE",
+        "content": "http://10.48.149.94/post.php?post=bunch.php",
+        "score": 10,
+        "url": "http://10.48.149.94/post.php?post=bunch.php"
+    },
+    {
+        "type": "SURFACE",
+        "content": "http://10.48.149.94/secret_file_do_not_read.txt",
+        "score": 10,
+        "url": "http://10.48.149.94/secret_file_do_not_read.txt"
+    },
+    {
+        "type": "LFI",
+        "content": "secret_file_do_not_read.txt",
+        "score": 80,
+        "url": "http://10.48.149.94/post.php?post=secret_file_do_not_read.txt"
+    }
+]
