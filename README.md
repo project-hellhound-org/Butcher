@@ -10,9 +10,13 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/python-3.10+-blue?style=flat-square&logo=python&logoColor=white"/>
-  <img src="https://img.shields.io/badge/version-2.0-red?style=flat-square"/>
+  <img src="https://img.shields.io/badge/version-3.1-red?style=flat-square"/>
   <img src="https://img.shields.io/badge/platform-Linux%20%7C%20macOS-lightgrey?style=flat-square"/>
   <img src="https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square"/>
+</p>
+
+<p align="center">
+  <img src="Images/cli_interface.png" alt="Butcher CLI" width="800"/>
 </p>
 
 ## ⚡ Features
@@ -123,6 +127,13 @@ butcher https://target.com --pattern ".product-title"
 # High-concurrency scraping with output
 butcher https://target.com -t 50 -o results.json
 ```
+
+## Evidence & Validation
+Butcher provides verified attack chains and visual proofs for every finding.
+
+<p align="center">
+  <img src="Images/Evidence.png" alt="Exploit Evidence" width="800"/>
+</p>
 
 ---
 
